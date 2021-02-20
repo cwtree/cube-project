@@ -41,12 +41,11 @@ public class UserServiceImpl implements UserService {
 			int res = phoenixUserManager.savePu(user);
 			if (res > 0) {
 				log.info("用户保存入库成功 {}", user);
-				//throw new RuntimeException("模拟保存用户抛出异常，事务回滚");
+				// throw new RuntimeException("模拟保存用户抛出异常，事务回滚");
 			}
 		} catch (Exception e) {
 			log.error("保存用户异常", e);
-			// TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			// 由于manager的save方法有缓存入库操作，所以这里得手动回滚缓存数据
+			// TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();由于manager的save方法有缓存入库操作，所以这里得手动回滚缓存数据
 			log.error("数据库事务回滚后的user信息 {}", user);
 			deleteUser(user);
 			// 回滚到指定点

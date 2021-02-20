@@ -83,7 +83,7 @@ public class MyCacheInterceptor {
 	public Object doAround(ProceedingJoinPoint point) throws Throwable {
 		Method method = ((MethodSignature) point.getSignature()).getMethod();
 		if (log.isInfoEnabled()) {
-			log.info("CACHE拦截方法：" + point.getSignature().getName());
+			log.info("进入manager层 {} 方法 {}", point.getTarget().getClass().getName(), point.getSignature().getName());
 		}
 		MyCache mc = method.getAnnotation(MyCache.class);
 		if (mc != null) {
@@ -91,13 +91,13 @@ public class MyCacheInterceptor {
 			if ((int) obj > 0) {
 				// 说明增删改操作有实际数据生效
 				if (log.isInfoEnabled()) {
-					log.info("方法 {} 检查到注解 @MyCache，返回 {}", method.getName(), obj);
+					log.info("检查到注解 @MyCache");
 				}
 				// 多个PUT，说明需要多次缓存不同的key
 				CachePut[] puts = mc.put();
 				if (ArrayUtils.isNotEmpty(puts)) {
 					if (log.isInfoEnabled()) {
-						log.info("方法 {} 检查到组合注解 @CachePut", method.getName());
+						log.info("检查到组合注解 @CachePut");
 					}
 					// 每个put代表需要缓存一个key组合数据
 					for (int i = 0; i < puts.length; i++) {
@@ -107,7 +107,7 @@ public class MyCacheInterceptor {
 				CacheDel[] dels = mc.del();
 				if (ArrayUtils.isNotEmpty(dels)) {
 					if (log.isInfoEnabled()) {
-						log.info("方法 {} 检查到组合注解 @CacheDel", method.getName());
+						log.info("检查到组合注解 @CacheDel");
 					}
 					for (int i = 0; i < dels.length; i++) {
 						delHandle(point, dels[i]);
@@ -116,14 +116,14 @@ public class MyCacheInterceptor {
 				return obj;
 			} else {
 				if (log.isInfoEnabled()) {
-					log.info("方法 {} 未实际产生数据影响", method.getName());
+					log.info("方法执行返回 {}", obj);
 				}
 			}
 		} else {
 			CacheGet get = method.getAnnotation(CacheGet.class);
 			if (get != null) {
 				if (log.isInfoEnabled()) {
-					log.info("方法 {} 检查到独立注解 @CacheGet", method.getName());
+					log.info("检查到独立注解 @CacheGet");
 				}
 				return getHandle(point, get);
 			}
@@ -131,7 +131,7 @@ public class MyCacheInterceptor {
 			CachePut put = method.getAnnotation(CachePut.class);
 			if (put != null) {
 				if (log.isInfoEnabled()) {
-					log.info("方法 {} 检查到独立注解 @CachePut", method.getName());
+					log.info("检查到独立注解 @CachePut");
 				}
 				if ((int) obj > 0) {
 					putHandle(point, put);
@@ -141,7 +141,7 @@ public class MyCacheInterceptor {
 			CacheDel del = method.getAnnotation(CacheDel.class);
 			if (del != null) {
 				if (log.isInfoEnabled()) {
-					log.info("方法 {} 检查到独立注解 @CacheDel", method.getName());
+					log.info("检查到独立注解 @CacheDel");
 				}
 				// 判断返回大于0，说明的确发生了数据库记录删除，再操作缓存
 				// 但是在save事务回滚时也需要复用该方法，但是数据库操作返回0
@@ -161,7 +161,7 @@ public class MyCacheInterceptor {
 		}
 		CacheKey[] ck = put.save();
 		if (ArrayUtil.isEmpty(ck)) {
-			log.error("【致命错误】CachePut注解下没有CacheKey注解，使用错误，系统退出！");
+			log.error("【致命错误】方法 {} 的CachePut注解下没有CacheKey注解，使用错误，系统退出！", point.getSignature().getName());
 			System.exit(-1);
 		}
 		Method method = ((MethodSignature) point.getSignature()).getMethod();
@@ -169,19 +169,13 @@ public class MyCacheInterceptor {
 		for (int i = 0; i < ck.length; i++) {
 			CacheKey cacheKey = ck[i];
 			String key = genKey(point, clazz[0], cacheKey);
-			if (log.isInfoEnabled()) {
-				log.info("key = " + key);
-			}
 			Object[] obj = point.getArgs();
 			if (ObjectUtils.isEmpty(obj[0])) {
-				log.error("【致命错误】参数为NULL，不要使用CachePut注解，系统退出！");
+				log.error("【致命错误】方法 {} 的参数为NULL，不要使用CachePut注解，系统退出！", point.getSignature().getName());
 				System.exit(-1);
 			} else {
-				managerRedis.opsForValue().set(key, clazz[0].cast(obj[0]), Utils.randomTTL(cacheKey.ttl()),
+				managerRedis.opsForValue().set(key, clazz[0].cast(obj[0]), Utils.randomTtl(cacheKey.ttl()),
 						TimeUnit.SECONDS);
-				if (log.isInfoEnabled()) {
-					log.info("设置缓存 {}", key);
-				}
 			}
 		}
 	}
@@ -193,19 +187,13 @@ public class MyCacheInterceptor {
 		}
 		CacheKey[] ck = del.del();
 		if (ArrayUtil.isEmpty(ck)) {
-			log.error("【致命错误】CacheDel注解下没有CacheKey注解，使用错误，系统退出！");
+			log.error("【致命错误】方法 {} 的CacheDel注解下没有CacheKey注解，使用错误，系统退出！", point.getSignature().getName());
 			System.exit(-1);
 		}
 		for (int i = 0; i < ck.length; i++) {
 			CacheKey cacheKey = ck[i];
 			String key = genKey(point, del.clazz(), cacheKey);
-			if (log.isInfoEnabled()) {
-				log.info("key = " + key);
-			}
 			managerRedis.delete(key);
-			if (log.isInfoEnabled()) {
-				log.info("缓存清空 {}", key);
-			}
 		}
 	}
 
@@ -219,35 +207,21 @@ public class MyCacheInterceptor {
 		Method method = ((MethodSignature) point.getSignature()).getMethod();
 		Class<? extends Serializable> clazz = (Class<? extends Serializable>) method.getReturnType();
 		String key = genKey(point, clazz, ck);
-		if (log.isInfoEnabled()) {
-			log.info("key = " + key);
-		}
-		int ttl = Utils.randomTTL(ck.ttl());
+		int ttl = Utils.randomTtl(ck.ttl());
 		Object obj = managerRedis.opsForValue().get(key);
-		// redisClient.get(key, clazz);
 		if (ObjectUtils.isEmpty(obj)) {
-			if (log.isInfoEnabled()) {
-				log.info("缓存查询为空");
-			}
 			obj = point.proceed();
 			if (ObjectUtils.isNotEmpty(obj)) {
-				if (log.isInfoEnabled()) {
-					log.info("数据库查询到数据 {}", obj);
-				}
 				managerRedis.opsForValue().set(key, clazz.cast(obj));
-				// redisClient.put(key, clazz.cast(obj), ttl);
 				if (log.isInfoEnabled()) {
-					log.info("成功将数据存入缓存");
+					log.info("数据库查询数据并设置缓存 {}", key);
 				}
 			} else {
-				if (log.isInfoEnabled()) {
-					log.info("数据库查询依然为空");
-				}
 				// 开启防缓存穿透，设置空缓存
 				if (ck.cacheNull()) {
 					managerRedis.opsForValue().set(key, CACHE_NULL, ttl, TimeUnit.SECONDS);
 					if (log.isInfoEnabled()) {
-						log.info("设置空缓存，防缓存穿透");
+						log.info("设置空缓存 {}，防缓存穿透", key);
 					}
 				}
 			}
@@ -267,11 +241,14 @@ public class MyCacheInterceptor {
 		String[] values = ck.value();
 		if (ArrayUtil.isEmpty(keys) || ArrayUtil.isEmpty(values)
 				|| ArrayUtil.length(keys) != ArrayUtil.length(values)) {
-			log.error("【致命错误】CacheKey注解下key和value配置错误，系统退出！");
+			log.error("【致命错误】方法 {} 的CacheKey注解下key和value配置错误，系统退出！", point.getSignature().getName());
 			System.exit(-1);
 		}
 		for (int i = 0; i < keys.length; i++) {
 			sb.append(SPILIT).append(keys[i]).append(SPILIT).append(getValue(context, values[i], String.class));
+		}
+		if (log.isInfoEnabled()) {
+			log.info("key = {}", sb.toString());
 		}
 		return sb.toString();
 	}

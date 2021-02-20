@@ -20,7 +20,7 @@ public class Utils {
 	 * @param ttl
 	 * @return
 	 */
-	public static int randomTTL(int ttl) {
+	public static int randomTtl(int ttl) {
 		return ttl + randomNum(0, ttl);
 	}
 
