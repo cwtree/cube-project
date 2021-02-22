@@ -22,6 +22,8 @@ import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 import com.cube.pojo.doo.PhoenixUser;
 import com.cube.pojo.dto.UserDTO;
+import com.cube.req.resp.advice.ReqDec;
+import com.cube.req.resp.advice.RespEnc;
 import com.cube.service.UserService;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -175,6 +177,22 @@ public class UserController {
 		}
 		log.warn("查询" + count * 3 + "次用户耗时：" + timer.intervalSecond() + " 秒");
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).build();
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param userDto
+	 * @return
+	 */
+	@ApiOperation("请求响应报文加解密测试")
+	@PostMapping("/encdec")
+	@ReqDec
+	@RespEnc
+	public MyResp encdec(@RequestBody @Validated String cont) {
+		log.info("请求报文解密后 {}", cont);
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data("my data resp " + cont)
+				.build();
 	}
 
 }

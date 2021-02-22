@@ -20,5 +20,8 @@ public class MyConfig {
 
 	private String systemName;
 	private String swaggerSwitch;
+	private String requestDecSwitch;
+	private String responseEncSwitch;
+	private String reqRespAesKey;
 
 }

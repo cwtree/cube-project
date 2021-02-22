@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateUnit;
@@ -15,6 +16,7 @@ import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.MD5;
+import cn.hutool.crypto.symmetric.AES;
 
 /**
  * 
@@ -171,5 +173,20 @@ public class HutoolTest {
 
 		// System.out.println(SecureUtil.m);
 
+	}
+
+	@Test
+	public void testEncDec() {
+		String cont = "Hello";
+		String key = "Yw/Vz4kpJUv0+E/4/LuZEA==";
+		// byte[] key =
+		// SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+		System.out.println("aes key = " + key);
+		AES aes = SecureUtil.aes(Base64.decode(key));
+		byte[] encrypt = aes.encrypt(cont);
+		String enc = Base64.encode(encrypt);
+		System.out.println("密文:" + enc);
+		byte[] decrypt = aes.decrypt(enc);
+		System.out.println(new String(decrypt));
 	}
 }
