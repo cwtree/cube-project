@@ -21,7 +21,7 @@ public class ThreadPoolConfig {
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
 	 * @return
 	 */
-	@Bean
+	@Bean("myThread")
 	public Executor myExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setThreadNamePrefix("my-thread-");

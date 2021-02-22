@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +32,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.http.HtmlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -103,6 +105,8 @@ public class UserController {
 		user.setSalt("salt");
 		user.setPhoneNumber("188");
 		user.setStatus(1);
+		//假设name是一个没有明确正则的字段，入库前要过滤HTML字符，防止XSS
+		user.setName(HtmlUtil.escape(user.getName()));
 		userService.saveUser(user);
 		/**
 		 * 用户保存成功后，要异步发送邮件通知
@@ -189,7 +193,7 @@ public class UserController {
 	@PostMapping("/encdec")
 	@ReqDec
 	@RespEnc
-	public MyResp encdec(@RequestBody @Validated String cont) {
+	public MyResp encdec(@RequestBody @Validated @NotBlank String cont) {
 		log.info("请求报文解密后 {}", cont);
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data("my data resp " + cont)
 				.build();

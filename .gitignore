@@ -2,3 +2,7 @@
 *.prefs
 .classpath
 .project
+basedir/.DS_Store
+basedir/work/.DS_Store
+basedir/work/Tomcat/.DS_Store
+.DS_Store

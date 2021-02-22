@@ -179,8 +179,6 @@ public class HutoolTest {
 	public void testEncDec() {
 		String cont = "Hello";
 		String key = "Yw/Vz4kpJUv0+E/4/LuZEA==";
-		// byte[] key =
-		// SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
 		System.out.println("aes key = " + key);
 		AES aes = SecureUtil.aes(Base64.decode(key));
 		byte[] encrypt = aes.encrypt(cont);
