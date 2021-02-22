@@ -3,7 +3,7 @@ package com.cube.service;
 import com.cube.pojo.doo.PhoenixUser;
 
 /**
- * 
+ * service层的方法理论是完成前台用户的一次请求 包含了业务逻辑，这里仅仅是举例，方法较简单，基本和manager层重复
  * 
  * @author phoenix
  * @date 2021年2月10日

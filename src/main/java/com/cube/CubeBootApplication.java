@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import lombok.extern.slf4j.Slf4j;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -25,7 +24,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableAspectJAutoProxy
 @Slf4j
 @EnableAutoConfiguration
-@EnableAdminServer
 @MapperScan(basePackages = { "com.cube.mapper" })
 @EnableTransactionManagement
 public class CubeBootApplication {
