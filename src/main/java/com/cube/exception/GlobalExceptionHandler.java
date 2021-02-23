@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,15 +17,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 全局异常处理
- * 
+ * 尽量不要把异常处理依赖于此全局异常处理器
+ * 能在业务里明确处理的，全部提前处理掉
  * @author phoenix
  * @date 2020年2月5日
  */
-
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 		log.error("进入全局异常Throwable处理", e);
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("url", request.getRequestURL().toString());
-		map.put("exception", ExceptionUtils.getMessage(e));
+		map.put("exception", ExceptionUtil.getMessage(e));
 		return MyResp.builder().code(Resp.ERROR.getCode()).msg(Resp.ERROR.getMsg()).innerMsg(e.toString()).data(map)
 				.build();
 	}
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
 					((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().get(0).getDefaultMessage());
 		} else {
 			log.error("请求异常", e);
-			errorMsg.append("参数异常").append("#").append(ExceptionUtils.getMessage(e));
+			errorMsg.append("参数异常").append("#").append(ExceptionUtil.getMessage(e));
 		}
 		return MyResp.builder().code(Resp.PARAM_ERROR.getCode()).msg(Resp.PARAM_ERROR.getMsg())
 				.innerMsg(errorMsg.toString()).build();

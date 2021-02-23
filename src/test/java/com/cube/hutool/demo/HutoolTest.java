@@ -1,6 +1,7 @@
 package com.cube.hutool.demo;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -11,12 +12,18 @@ import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.net.NetUtil;
+import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
+import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.dfa.WordTree;
 
 /**
  * 
@@ -186,5 +193,77 @@ public class HutoolTest {
 		System.out.println("密文:" + enc);
 		byte[] decrypt = aes.decrypt(enc);
 		System.out.println(new String(decrypt));
+
+		String str = SecureUtil.md5(cont);
+		System.out.println("MD5: " + str);
+		System.out.println("MD5 16位: " + DigestUtil.md5Hex16(cont));
+
+		//RSA
+		RSA rsa = new RSA();
+		String privateKey = rsa.getPrivateKeyBase64();
+		String publicKey = rsa.getPublicKeyBase64();
+		System.out.println("私钥："+privateKey);
+		System.out.println("公钥："+publicKey);
+		String rsaEnc = rsa.encryptBase64(cont, KeyType.PublicKey);
+		System.out.println("加密后："+rsaEnc);
+		System.out.println("解密后："+rsa.decryptStr(rsaEnc, KeyType.PrivateKey));
+	}
+	
+	@Test
+	public void testNet() {
+		String ip = "192.168.2.65";
+		long ipLong = 2130706433L;
+		String long2ip = NetUtil.longToIpv4(ipLong);
+		System.out.println(long2ip);
+		long ip2long = NetUtil.ipv4ToLong(ip);
+		System.out.println(ip2long);
+		//端口探测
+		System.out.println("端口是否连通："+NetUtil.isUsableLocalPort(6379));
+		System.out.println("端口是否有效："+NetUtil.isValidPort(77777));
+		//IP脱敏
+		System.out.println(NetUtil.hideIpPart(ip));
+		//获取网卡信息
+		System.out.println(NetUtil.getNetworkInterfaces());
+		//eth4 (Realtek PCIe GBE Family Controller)
+		System.out.println(NetUtil.getNetworkInterface("eth4"));
+		System.out.println(NetUtil.LOCAL_IP);
+	}
+	
+	@Test
+	public void testDFA() {
+		WordTree tree = new WordTree();
+		tree.addWord("中国");
+		tree.addWord("移动");
+		tree.addWord("杭州");
+		tree.addWord("移动通信");
+		tree.addWord("杭州市");
+		tree.addWord("中国人");
+		
+		String text = "中国移动在中国，都是中国人，移动杭研在杭州，杭州市";
+		
+		 List<String> match = tree.matchAll(text, -1, false, false);
+		 System.out.println(match);
+	}
+	
+	@Test
+	public void testStr() {
+		String str = "1w2w3w4w5w6w7";
+		//limit 分割成多少个字符串
+		System.out.println(StrSpliter.split(str, "w",1,true,true));
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
