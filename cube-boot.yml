@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: phoenix
-  namespace: phoenix-check
+  name: cube-project
+  #填写自己的namespace
+  namespace: mynamespace
 spec:
   type: NodePort
   ports:
@@ -13,24 +14,25 @@ spec:
     protocol: TCP
     name: xxl-30557
   selector:
-    app: phoenix
+    app: cube-project
 
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: phoenix
-  namespace: phoenix-check
+  name: cube-project
+  namespace: mynamespace
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: phoenix
+        app: cube-project
     spec:
       containers:
-      - name: phoenix
-        image: hub.komect.com:10443/phoenix-check/phoenix:d7c3310d
+      - name: cube-project
+        #镜像地址
+        image: ip:port/mynamespace/cube-project:${version}
         imagePullPolicy: Always
         env:   #容器环境变量设置，可以覆盖工程中的配置
         - name: spring.profiles.active
@@ -43,4 +45,4 @@ spec:
             cpu: 0.2
             memory: 2Gi
       imagePullSecrets:
-      - name: phoenix-image         
+      - name: cube-project-image         

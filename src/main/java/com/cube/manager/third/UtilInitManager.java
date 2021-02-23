@@ -46,7 +46,7 @@ public class UtilInitManager implements CommandLineRunner {
 	 * @throws Exception
 	 */
 	public String aesDec(String str) throws Exception {
-		return new String(GlobalVar.AES.decrypt(str), "UTF-8");
+		return new String(GlobalVar.AES.decrypt(str), GlobalVar.UTF8);
 	}
 
 	@Override
@@ -54,6 +54,8 @@ public class UtilInitManager implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		byte[] key = Base64.decode(myConfig.getReqRespAesKey());
 		GlobalVar.AES = SecureUtil.aes(key);
-		log.info("完成AES加解密对象初始化");
+		if(log.isInfoEnabled()) {
+			log.info("完成AES加解密对象初始化");
+		}
 	}
 }

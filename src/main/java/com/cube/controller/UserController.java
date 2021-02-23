@@ -133,11 +133,17 @@ public class UserController {
 		String res = myRedisTemplate.opsForList().rightPop("cube-list", 1000L, TimeUnit.MILLISECONDS);
 		// 查询用户
 		PhoenixUser pu = userService.getUserById(Long.parseLong(request.getParameter("id")));
-		log.info("id pu {}", pu);
+		if (log.isInfoEnabled()) {
+			log.info("id pu {}", pu);
+		}
 		pu = userService.getUserByName(request.getParameter("name"));
-		log.info("name pu {}", pu);
+		if (log.isInfoEnabled()) {
+			log.info("name pu {}", pu);
+		}
 		pu = userService.getUserByPhone(request.getParameter("phone"));
-		log.info("phone pu {}", pu);
+		if (log.isInfoEnabled()) {
+			log.info("phone pu {}", pu);
+		}
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(res).build();
 	}
 
@@ -171,7 +177,9 @@ public class UserController {
 					.salt("salt" + i).phoneNumber("phone" + i).status(1).build();
 			userService.saveUser(pu);
 		}
-		log.warn("创建" + count + "个用户耗时：" + timer.intervalSecond() + " 秒");
+		if(log.isWarnEnabled()) {
+			log.warn("创建" + count + "个用户耗时：" + timer.intervalSecond() + " 秒");
+		}
 		// 查询N次
 		timer = DateUtil.timer();
 		for (int i = 0; i < count; i++) {
@@ -179,7 +187,9 @@ public class UserController {
 			userService.getUserByName("name" + i);
 			userService.getUserByPhone("phone" + i);
 		}
-		log.warn("查询" + count * 3 + "次用户耗时：" + timer.intervalSecond() + " 秒");
+		if(log.isWarnEnabled()) {
+			log.warn("查询" + count * 3 + "次用户耗时：" + timer.intervalSecond() + " 秒");
+		}
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).build();
 	}
 
@@ -194,7 +204,9 @@ public class UserController {
 	@ReqDec
 	@RespEnc
 	public MyResp encdec(@RequestBody @Validated @NotBlank String cont) {
-		log.info("请求报文解密后 {}", cont);
+		if(log.isInfoEnabled()) {
+			log.info("请求报文解密后 {}", cont);
+		}
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data("my data resp " + cont)
 				.build();
 	}
