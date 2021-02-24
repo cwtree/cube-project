@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS `phoenix_user`;
 CREATE TABLE `phoenix_user` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+  `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
   `name` VARCHAR(32) NOT NULL UNIQUE COMMENT '用户名',
-  `password` VARCHAR(32) NOT NULL COMMENT '加密后的密码',
+  `password` VARCHAR(128) NOT NULL COMMENT '加密后的密码sha256',
   `salt` VARCHAR(32) NOT NULL COMMENT '加密使用的盐',
   `email` VARCHAR(32) NOT NULL UNIQUE COMMENT '邮箱',
   `phone_number` VARCHAR(15) NOT NULL UNIQUE COMMENT '手机号码',
@@ -15,7 +15,7 @@ CREATE TABLE `phoenix_user` (
 
 DROP TABLE IF EXISTS `info_collection`;
 CREATE TABLE `info_collection` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+  `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
   `username` VARCHAR(32) NOT NULL COMMENT '联系人',
   `organization` VARCHAR(128) NOT NULL COMMENT '单位名称',
   `province_code` VARCHAR(32) NOT NULL COMMENT '省编码',

@@ -6,8 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.cube.util.Utils;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -95,7 +94,7 @@ public class MyCacheInterceptor {
 				}
 				// 多个PUT，说明需要多次缓存不同的key
 				CachePut[] puts = mc.put();
-				if (ArrayUtils.isNotEmpty(puts)) {
+				if(ArrayUtil.isNotEmpty(puts)) {
 					if (log.isInfoEnabled()) {
 						log.info("检查到组合注解 @CachePut");
 					}
@@ -105,7 +104,7 @@ public class MyCacheInterceptor {
 					}
 				}
 				CacheDel[] dels = mc.del();
-				if (ArrayUtils.isNotEmpty(dels)) {
+				if (ArrayUtil.isNotEmpty(dels)) {
 					if (log.isInfoEnabled()) {
 						log.info("检查到组合注解 @CacheDel");
 					}
@@ -170,7 +169,7 @@ public class MyCacheInterceptor {
 			CacheKey cacheKey = ck[i];
 			String key = genKey(point, clazz[0], cacheKey);
 			Object[] obj = point.getArgs();
-			if (ObjectUtils.isEmpty(obj[0])) {
+			if(ObjectUtil.isEmpty(obj[0])) {
 				log.error("【致命错误】方法 {} 的参数为NULL，不要使用CachePut注解，系统退出！", point.getSignature().getName());
 				System.exit(-1);
 			} else {
@@ -209,9 +208,9 @@ public class MyCacheInterceptor {
 		String key = genKey(point, clazz, ck);
 		int ttl = Utils.randomTtl(ck.ttl());
 		Object obj = managerRedis.opsForValue().get(key);
-		if (ObjectUtils.isEmpty(obj)) {
+		if (ObjectUtil.isEmpty(obj)) {
 			obj = point.proceed();
-			if (ObjectUtils.isNotEmpty(obj)) {
+			if (ObjectUtil.isNotEmpty(obj)) {
 				managerRedis.opsForValue().set(key, clazz.cast(obj));
 				if (log.isInfoEnabled()) {
 					log.info("数据库查询数据并设置缓存 {}", key);

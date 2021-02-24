@@ -1,5 +1,7 @@
 package com.cube.hutool.demo;
 
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +17,10 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -197,6 +201,7 @@ public class HutoolTest {
 		String str = SecureUtil.md5(cont);
 		System.out.println("MD5: " + str);
 		System.out.println("MD5 16位: " + DigestUtil.md5Hex16(cont));
+		System.out.println("SHA-256:"+DigestUtil.sha256Hex(cont));
 
 		//RSA
 		RSA rsa = new RSA();
@@ -207,6 +212,12 @@ public class HutoolTest {
 		String rsaEnc = rsa.encryptBase64(cont, KeyType.PublicKey);
 		System.out.println("加密后："+rsaEnc);
 		System.out.println("解密后："+rsa.decryptStr(rsaEnc, KeyType.PrivateKey));
+		PublicKey publicK = rsa.getPublicKey();
+		String modulus = HexUtil.encodeHexStr(((RSAPublicKey)publicK).getModulus().toByteArray());
+		String exponent = HexUtil.encodeHexStr(((RSAPublicKey)publicK).getPublicExponent().toByteArray());
+		System.out.println(modulus);
+		System.out.println(exponent);
+		
 	}
 	
 	@Test
@@ -230,7 +241,7 @@ public class HutoolTest {
 	}
 	
 	@Test
-	public void testDFA() {
+	public void testDfa() {
 		WordTree tree = new WordTree();
 		tree.addWord("中国");
 		tree.addWord("移动");
@@ -250,6 +261,11 @@ public class HutoolTest {
 		String str = "1w2w3w4w5w6w7";
 		//limit 分割成多少个字符串
 		System.out.println(StrSpliter.split(str, "w",1,true,true));
+	}
+	
+	@Test
+	public void testUrl() {
+		System.out.println(URLUtil.toURI("http://www.baidu.com/df/sdf/df").getHost());
 	}
 }
 

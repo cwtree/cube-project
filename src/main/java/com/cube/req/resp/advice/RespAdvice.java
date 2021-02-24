@@ -2,7 +2,6 @@ package com.cube.req.resp.advice;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -17,6 +16,7 @@ import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,7 +49,7 @@ public class RespAdvice implements ResponseBodyAdvice<Object> {
 			try {
 				MyResp resp = (MyResp) body;
 				String data = (String) resp.getData();
-				if (StringUtils.isNotBlank(data)) {
+				if (StrUtil.isNotBlank(data)) {
 					String newData = Base64.encode(utilInitManager.aesEnc(data));
 					resp.setData(newData);
 					return resp;
