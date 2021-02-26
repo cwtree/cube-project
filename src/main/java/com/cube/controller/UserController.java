@@ -98,6 +98,8 @@ public class UserController {
 		}
 		Map<String, String> mapping = CollUtil.newHashMap();
 		mapping.put("username", "name");
+		//dto里的birth对应pu中的createTime
+		mapping.put("birth", "createTime");
 		PhoenixUser user = new PhoenixUser();
 		BeanUtil.copyProperties(userDto, user, CopyOptions.create().setFieldMapping(mapping));
 		user.setPassword("123");
@@ -105,7 +107,8 @@ public class UserController {
 		user.setSalt("salt");
 		user.setPhoneNumber("188");
 		user.setStatus(1);
-		//假设name是一个没有明确正则的字段，入库前要过滤HTML字符，防止XSS
+		
+		// 假设name是一个没有明确正则的字段，入库前要过滤HTML字符，防止XSS
 		user.setName(HtmlUtil.escape(user.getName()));
 		userService.saveUser(user);
 		/**
@@ -177,7 +180,7 @@ public class UserController {
 					.salt("salt" + i).phoneNumber("phone" + i).status(1).build();
 			userService.saveUser(pu);
 		}
-		if(log.isWarnEnabled()) {
+		if (log.isWarnEnabled()) {
 			log.warn("创建" + count + "个用户耗时：" + timer.intervalSecond() + " 秒");
 		}
 		// 查询N次
@@ -187,7 +190,7 @@ public class UserController {
 			userService.getUserByName("name" + i);
 			userService.getUserByPhone("phone" + i);
 		}
-		if(log.isWarnEnabled()) {
+		if (log.isWarnEnabled()) {
 			log.warn("查询" + count * 3 + "次用户耗时：" + timer.intervalSecond() + " 秒");
 		}
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).build();
@@ -204,7 +207,7 @@ public class UserController {
 	@ReqDec
 	@RespEnc
 	public MyResp encdec(@RequestBody @Validated @NotBlank String cont) {
-		if(log.isInfoEnabled()) {
+		if (log.isInfoEnabled()) {
 			log.info("请求报文解密后 {}", cont);
 		}
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data("my data resp " + cont)

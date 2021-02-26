@@ -54,7 +54,7 @@ public class UtilInitManager implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		byte[] key = Base64.decode(myConfig.getReqRespAesKey());
 		GlobalVar.AES = SecureUtil.aes(key);
-		if(log.isInfoEnabled()) {
+		if (log.isInfoEnabled()) {
 			log.info("完成AES加解密对象初始化");
 		}
 	}

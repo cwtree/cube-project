@@ -21,9 +21,8 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 全局异常处理
- * 尽量不要把异常处理依赖于此全局异常处理器
- * 能在业务里明确处理的，全部提前处理掉
+ * 全局异常处理 尽量不要把异常处理依赖于此全局异常处理器 能在业务里明确处理的，全部提前处理掉
+ * 
  * @author phoenix
  * @date 2020年2月5日
  */

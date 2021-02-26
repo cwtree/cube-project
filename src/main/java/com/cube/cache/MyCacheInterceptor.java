@@ -20,10 +20,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
-import com.cube.util.Utils;
-
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -94,7 +93,7 @@ public class MyCacheInterceptor {
 				}
 				// 多个PUT，说明需要多次缓存不同的key
 				CachePut[] puts = mc.put();
-				if(ArrayUtil.isNotEmpty(puts)) {
+				if (ArrayUtil.isNotEmpty(puts)) {
 					if (log.isInfoEnabled()) {
 						log.info("检查到组合注解 @CachePut");
 					}
@@ -169,11 +168,11 @@ public class MyCacheInterceptor {
 			CacheKey cacheKey = ck[i];
 			String key = genKey(point, clazz[0], cacheKey);
 			Object[] obj = point.getArgs();
-			if(ObjectUtil.isEmpty(obj[0])) {
+			if (ObjectUtil.isEmpty(obj[0])) {
 				log.error("【致命错误】方法 {} 的参数为NULL，不要使用CachePut注解，系统退出！", point.getSignature().getName());
 				System.exit(-1);
 			} else {
-				managerRedis.opsForValue().set(key, clazz[0].cast(obj[0]), Utils.randomTtl(cacheKey.ttl()),
+				managerRedis.opsForValue().set(key, clazz[0].cast(obj[0]), RandomUtil.randomInt(cacheKey.ttl()),
 						TimeUnit.SECONDS);
 			}
 		}
@@ -206,7 +205,7 @@ public class MyCacheInterceptor {
 		Method method = ((MethodSignature) point.getSignature()).getMethod();
 		Class<? extends Serializable> clazz = (Class<? extends Serializable>) method.getReturnType();
 		String key = genKey(point, clazz, ck);
-		int ttl = Utils.randomTtl(ck.ttl());
+		int ttl = RandomUtil.randomInt(ck.ttl());
 		Object obj = managerRedis.opsForValue().get(key);
 		if (ObjectUtil.isEmpty(obj)) {
 			obj = point.proceed();

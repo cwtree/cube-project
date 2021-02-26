@@ -19,6 +19,7 @@ import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdcardUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -201,25 +202,25 @@ public class HutoolTest {
 		String str = SecureUtil.md5(cont);
 		System.out.println("MD5: " + str);
 		System.out.println("MD5 16位: " + DigestUtil.md5Hex16(cont));
-		System.out.println("SHA-256:"+DigestUtil.sha256Hex(cont));
+		System.out.println("SHA-256:" + DigestUtil.sha256Hex("Admin@888" + "9348ierj8truigjf03wioekrutgfhj"));
 
-		//RSA
+		// RSA
 		RSA rsa = new RSA();
 		String privateKey = rsa.getPrivateKeyBase64();
 		String publicKey = rsa.getPublicKeyBase64();
-		System.out.println("私钥："+privateKey);
-		System.out.println("公钥："+publicKey);
+		System.out.println("私钥：" + privateKey);
+		System.out.println("公钥：" + publicKey);
 		String rsaEnc = rsa.encryptBase64(cont, KeyType.PublicKey);
-		System.out.println("加密后："+rsaEnc);
-		System.out.println("解密后："+rsa.decryptStr(rsaEnc, KeyType.PrivateKey));
+		System.out.println("加密后：" + rsaEnc);
+		System.out.println("解密后：" + rsa.decryptStr(rsaEnc, KeyType.PrivateKey));
 		PublicKey publicK = rsa.getPublicKey();
-		String modulus = HexUtil.encodeHexStr(((RSAPublicKey)publicK).getModulus().toByteArray());
-		String exponent = HexUtil.encodeHexStr(((RSAPublicKey)publicK).getPublicExponent().toByteArray());
+		String modulus = HexUtil.encodeHexStr(((RSAPublicKey) publicK).getModulus().toByteArray());
+		String exponent = HexUtil.encodeHexStr(((RSAPublicKey) publicK).getPublicExponent().toByteArray());
 		System.out.println(modulus);
 		System.out.println(exponent);
-		
+
 	}
-	
+
 	@Test
 	public void testNet() {
 		String ip = "192.168.2.65";
@@ -228,18 +229,18 @@ public class HutoolTest {
 		System.out.println(long2ip);
 		long ip2long = NetUtil.ipv4ToLong(ip);
 		System.out.println(ip2long);
-		//端口探测
-		System.out.println("端口是否连通："+NetUtil.isUsableLocalPort(6379));
-		System.out.println("端口是否有效："+NetUtil.isValidPort(77777));
-		//IP脱敏
+		// 端口探测
+		System.out.println("端口是否连通：" + NetUtil.isUsableLocalPort(6379));
+		System.out.println("端口是否有效：" + NetUtil.isValidPort(77777));
+		// IP脱敏
 		System.out.println(NetUtil.hideIpPart(ip));
-		//获取网卡信息
+		// 获取网卡信息
 		System.out.println(NetUtil.getNetworkInterfaces());
-		//eth4 (Realtek PCIe GBE Family Controller)
+		// eth4 (Realtek PCIe GBE Family Controller)
 		System.out.println(NetUtil.getNetworkInterface("eth4"));
 		System.out.println(NetUtil.LOCAL_IP);
 	}
-	
+
 	@Test
 	public void testDfa() {
 		WordTree tree = new WordTree();
@@ -249,37 +250,28 @@ public class HutoolTest {
 		tree.addWord("移动通信");
 		tree.addWord("杭州市");
 		tree.addWord("中国人");
-		
+
 		String text = "中国移动在中国，都是中国人，移动杭研在杭州，杭州市";
-		
-		 List<String> match = tree.matchAll(text, -1, false, false);
-		 System.out.println(match);
+
+		List<String> match = tree.matchAll(text, -1, false, false);
+		System.out.println(match);
 	}
-	
+
 	@Test
 	public void testStr() {
 		String str = "1w2w3w4w5w6w7";
-		//limit 分割成多少个字符串
-		System.out.println(StrSpliter.split(str, "w",1,true,true));
+		// limit 分割成多少个字符串
+		System.out.println(StrSpliter.split(str, "w", 1, true, true));
 	}
-	
+
 	@Test
 	public void testUrl() {
 		System.out.println(URLUtil.toURI("http://www.baidu.com/df/sdf/df").getHost());
 	}
+
+	@Test
+	public void testUtil() {
+		System.out.println(RandomUtil.randomInt(10));
+	}
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
