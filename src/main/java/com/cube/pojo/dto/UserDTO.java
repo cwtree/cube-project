@@ -1,14 +1,9 @@
 package com.cube.pojo.dto;
 
-import java.util.Date;
-
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.cube.validator.annotation.UserAge;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,14 +35,6 @@ public class UserDTO {
 	@ApiModelProperty("用户年龄")
 	@UserAge
 	private Integer age;
-
-	@ApiModelProperty("出生年月日")
-	// 适合application/json，反射AbstractJackson2HttpMessageConverter#canRead(Type,
-	// Class<?>, MediaType)
-	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-	// 适合application/form
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date birth;
 
 	@ApiModelProperty("用户备注")
 	@Size(min = 0, max = 50, message = "用户备注字段过长")

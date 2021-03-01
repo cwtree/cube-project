@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.cube.config.MyConfig;
-import com.cube.manager.third.UtilInitManager;
+import com.cube.manager.third.ExternalManager;
 import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 
@@ -33,7 +33,7 @@ public class RespAdvice implements ResponseBodyAdvice<Object> {
 	private MyConfig myConfig;
 
 	@Resource
-	private UtilInitManager utilInitManager;
+	private ExternalManager utilInitManager;
 
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {

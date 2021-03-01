@@ -24,7 +24,7 @@ public class MyResp {
 	 * 该字段用来赋值具体的错误exception等信息，方便通过返回能直接定位到接口错误原因
 	 * 避免登服务器查日志，该字段前端不用处理，留给后端研发通过接口返回查看
 	 */
-	private String innerMsg;
+	private Object innerMsg;
 
 	public static MyResp result(Resp resp) {
 		return MyResp.builder().code(resp.getCode()).msg(resp.getMsg()).build();
@@ -34,8 +34,8 @@ public class MyResp {
 		return MyResp.builder().code(resp.getCode()).msg(resp.getMsg()).data(data).build();
 	}
 
-	public static MyResp result(Resp resp, String innerMsg) {
-		return MyResp.builder().code(resp.getCode()).msg(resp.getMsg()).innerMsg(innerMsg).build();
+	public static MyResp result(Resp resp, Object data, Object innerMsg) {
+		return MyResp.builder().code(resp.getCode()).msg(resp.getMsg()).data(data).innerMsg(innerMsg).build();
 	}
 
 }

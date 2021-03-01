@@ -98,7 +98,7 @@ public class UserController {
 		}
 		Map<String, String> mapping = CollUtil.newHashMap();
 		mapping.put("username", "name");
-		//dto里的birth对应pu中的createTime
+		// dto里的birth对应pu中的createTime
 		mapping.put("birth", "createTime");
 		PhoenixUser user = new PhoenixUser();
 		BeanUtil.copyProperties(userDto, user, CopyOptions.create().setFieldMapping(mapping));
@@ -107,7 +107,7 @@ public class UserController {
 		user.setSalt("salt");
 		user.setPhoneNumber("188");
 		user.setStatus(1);
-		
+
 		// 假设name是一个没有明确正则的字段，入库前要过滤HTML字符，防止XSS
 		user.setName(HtmlUtil.escape(user.getName()));
 		userService.saveUser(user);

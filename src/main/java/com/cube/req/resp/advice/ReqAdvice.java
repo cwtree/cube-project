@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 
 import com.cube.config.MyConfig;
-import com.cube.manager.third.UtilInitManager;
+import com.cube.manager.third.ExternalManager;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class ReqAdvice implements RequestBodyAdvice {
 	private MyConfig myConfig;
 
 	@Resource
-	private UtilInitManager utilInitManager;
+	private ExternalManager utilInitManager;
 
 	@Override
 	public boolean supports(MethodParameter methodParameter, Type targetType,
