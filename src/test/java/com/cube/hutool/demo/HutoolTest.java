@@ -266,7 +266,7 @@ public class HutoolTest {
 		// limit 分割成多少个字符串
 		System.out.println(StrSpliter.split(str, "w", 1, true, true));
 		String a = null;
-		System.out.println(StrUtil.trim(a)+"----");
+		System.out.println(StrUtil.trim(a) + "----");
 	}
 
 	@Test
