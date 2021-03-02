@@ -83,99 +83,27 @@ public class MyCacheInterceptor {
 		if (log.isInfoEnabled()) {
 			log.info("进入manager层 {} 方法 {}", point.getTarget().getClass().getName(), point.getSignature().getName());
 		}
-		MyCache mc = method.getAnnotation(MyCache.class);
-		if (mc != null) {
-			Object obj = point.proceed();
+		CacheGet get = method.getAnnotation(CacheGet.class);
+		if (get != null) {
+			if (log.isInfoEnabled()) {
+				log.info("检查到独立注解 @CacheGet");
+			}
+			return getHandle(point, get);
+		}
+		Object obj = point.proceed();
+		// 先清数据库，再清除缓存
+		CacheDel del = method.getAnnotation(CacheDel.class);
+		if (del != null) {
+			if (log.isInfoEnabled()) {
+				log.info("检查到独立注解 @CacheDel");
+			}
+			// 判断返回大于0，说明的确发生了数据库记录删除，再操作缓存
+			// 但是在save事务回滚时也需要复用该方法，但是数据库操作返回0
 			if ((int) obj > 0) {
-				// 说明增删改操作有实际数据生效
-				if (log.isInfoEnabled()) {
-					log.info("检查到注解 @MyCache");
-				}
-				// 多个PUT，说明需要多次缓存不同的key
-				CachePut[] puts = mc.put();
-				if (ArrayUtil.isNotEmpty(puts)) {
-					if (log.isInfoEnabled()) {
-						log.info("检查到组合注解 @CachePut");
-					}
-					// 每个put代表需要缓存一个key组合数据
-					for (int i = 0; i < puts.length; i++) {
-						putHandle(point, puts[i]);
-					}
-				}
-				CacheDel[] dels = mc.del();
-				if (ArrayUtil.isNotEmpty(dels)) {
-					if (log.isInfoEnabled()) {
-						log.info("检查到组合注解 @CacheDel");
-					}
-					for (int i = 0; i < dels.length; i++) {
-						delHandle(point, dels[i]);
-					}
-				}
-				return obj;
-			} else {
-				if (log.isInfoEnabled()) {
-					log.info("方法执行返回 {}", obj);
-				}
-			}
-		} else {
-			CacheGet get = method.getAnnotation(CacheGet.class);
-			if (get != null) {
-				if (log.isInfoEnabled()) {
-					log.info("检查到独立注解 @CacheGet");
-				}
-				return getHandle(point, get);
-			}
-			Object obj = point.proceed();
-			CachePut put = method.getAnnotation(CachePut.class);
-			if (put != null) {
-				if (log.isInfoEnabled()) {
-					log.info("检查到独立注解 @CachePut");
-				}
-				if ((int) obj > 0) {
-					putHandle(point, put);
-				}
-			}
-			// 先清数据库，再清除缓存
-			CacheDel del = method.getAnnotation(CacheDel.class);
-			if (del != null) {
-				if (log.isInfoEnabled()) {
-					log.info("检查到独立注解 @CacheDel");
-				}
-				// 判断返回大于0，说明的确发生了数据库记录删除，再操作缓存
-				// 但是在save事务回滚时也需要复用该方法，但是数据库操作返回0
-				if ((int) obj > 0) {
-					delHandle(point, del);
-				}
-			}
-			return obj;
-		}
-		return point.proceed();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void putHandle(ProceedingJoinPoint point, CachePut put) throws Throwable {
-		if (log.isInfoEnabled()) {
-			log.info("CachePut操作");
-		}
-		CacheKey[] ck = put.save();
-		if (ArrayUtil.isEmpty(ck)) {
-			log.error("【致命错误】方法 {} 的CachePut注解下没有CacheKey注解，使用错误，系统退出！", point.getSignature().getName());
-			System.exit(-1);
-		}
-		Method method = ((MethodSignature) point.getSignature()).getMethod();
-		Class<? extends Serializable>[] clazz = (Class<? extends Serializable>[]) method.getParameterTypes();
-		for (int i = 0; i < ck.length; i++) {
-			CacheKey cacheKey = ck[i];
-			String key = genKey(point, clazz[0], cacheKey);
-			Object[] obj = point.getArgs();
-			if (ObjectUtil.isEmpty(obj[0])) {
-				log.error("【致命错误】方法 {} 的参数为NULL，不要使用CachePut注解，系统退出！", point.getSignature().getName());
-				System.exit(-1);
-			} else {
-				managerRedis.opsForValue().set(key, clazz[0].cast(obj[0]), RandomUtil.randomInt(cacheKey.ttl()),
-						TimeUnit.SECONDS);
+				delHandle(point, del);
 			}
 		}
+		return obj;
 	}
 
 	private void delHandle(ProceedingJoinPoint point, CacheDel del) throws Throwable {

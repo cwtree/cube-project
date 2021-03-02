@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.extern.slf4j.Slf4j;
 import tk.mybatis.spring.annotation.MapperScan;
-
 /**
  * 
  * 
