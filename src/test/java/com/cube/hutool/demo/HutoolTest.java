@@ -21,6 +21,7 @@ import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
@@ -84,6 +85,8 @@ public class HutoolTest {
 		/**
 		 * 字符串转日期 yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm yyyy-MM-dd
 		 * HH:mm:ss.SSS
+		 * 
+		 * DatePattern
 		 */
 		String dateStr = "2021-2-12";
 		System.out.println(DateUtil.parse(dateStr));
@@ -262,6 +265,8 @@ public class HutoolTest {
 		String str = "1w2w3w4w5w6w7";
 		// limit 分割成多少个字符串
 		System.out.println(StrSpliter.split(str, "w", 1, true, true));
+		String a = null;
+		System.out.println(StrUtil.trim(a)+"----");
 	}
 
 	@Test
