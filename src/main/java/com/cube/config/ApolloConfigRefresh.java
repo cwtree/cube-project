@@ -41,12 +41,9 @@ public class ApolloConfigRefresh {
 	@ApolloConfigChangeListener
 	public void applicationChange(ConfigChangeEvent changeEvent) {
 		String namespace = changeEvent.getNamespace();
-		// 刷新所有的配置，不仅仅是phoenix前缀的
+		// 刷新所有的配置，不仅仅是前缀的
 		refreshScope.refreshAll();
 		log.info("{} namespace config refresh ... ", namespace);
-		// 刷新某一个具体的配置项
-		// refreshScope.refresh("bean name");
-		// 更新日志级别
 		refreshLogLevel(changeEvent);
 	}
 
