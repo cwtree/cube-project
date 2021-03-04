@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.cube.manager.PhoenixUserManager;
 import com.cube.pojo.doo.PhoenixUser;
 import com.cube.service.UserService;
@@ -69,6 +70,13 @@ public class UserServiceImpl implements UserService {
 	public int deleteUser(PhoenixUser user) {
 		// TODO Auto-generated method stub
 		return phoenixUserManager.deleteUser(user);
+	}
+
+	@SentinelResource(value = "用户头像更新")
+	@Override
+	public String updateHeadPic(String pic) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

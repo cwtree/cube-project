@@ -36,7 +36,6 @@ import cn.hutool.http.HtmlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 
@@ -75,7 +74,7 @@ public class UserController {
 				.data(userService.getUserById(id)).build();
 	}
 
-	@ApiIgnore
+	// @ApiIgnore
 	@GetMapping("/refresh")
 	public MyResp refresh() {
 		if (log.isInfoEnabled()) {

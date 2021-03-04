@@ -54,4 +54,13 @@ public interface UserService {
 	 */
 	int deleteUser(PhoenixUser user);
 
+	/**
+	 * 更新用户头像 这是一个非常消耗资源的操作，涉及图片删除、存储，用户头像字段数据更新
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param pic
+	 * @return
+	 */
+	String updateHeadPic(String pic);
+
 }
