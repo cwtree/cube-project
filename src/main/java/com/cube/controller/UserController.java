@@ -75,8 +75,8 @@ public class UserController {
 	}
 
 	/**
-	 * 配置刷新
-	 * ApiIgnore
+	 * 配置刷新 ApiIgnore
+	 * 
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
 	 * @return
 	 */
