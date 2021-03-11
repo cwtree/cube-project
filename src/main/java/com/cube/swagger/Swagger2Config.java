@@ -42,8 +42,8 @@ public class Swagger2Config {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfo("cube-boot示例工程", "API信息", "API V1.0", "xxx",
-				new Contact("中国移动杭州研发中心", "CMCC", "XXXX@cmhi.chinamobile.com"), "CMCC.HY", "", Collections.emptyList());
+		return new ApiInfo("cube系列示例工程", "API信息", "API V1.0", "xxx",
+				new Contact("CUBE", "CUBE", "chiweitree2008@126.com"), "CUBE.HZ", "", Collections.emptyList());
 	}
 
 }
