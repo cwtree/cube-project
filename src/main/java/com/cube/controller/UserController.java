@@ -83,9 +83,9 @@ public class UserController {
 	@GetMapping("/refresh")
 	public MyResp refresh() {
 		if (log.isInfoEnabled()) {
-			log.info("配置刷新");
+			log.info("配置刷新 {}",myConfig);
 		}
-		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(myConfig).build();
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(myConfig.toString()).build();
 	}
 
 	/**
