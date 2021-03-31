@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
+import com.cube.pojo.dto.UserDTO;
 import com.cube.pojo.vo.UserVO;
+import com.cube.req.resp.advice.ReqDec;
 import com.cube.service.PayRouteService;
 
 import cn.hutool.captcha.CaptchaUtil;
@@ -105,5 +108,33 @@ public class SystemController {
 	public MyResp vo() {
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
 				.data(UserVO.builder().age(1).id(2L).username("chiwei").build()).build();
+	}
+	
+	/**
+	 * form
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @return
+	 */
+	@ApiOperation("form测试")
+	@PostMapping(value = "/form",consumes = {"application/x-www-form-urlencoded"})
+	@ResponseBody
+	public MyResp test(@RequestParam("xml") UserDTO dto) {
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
+				.data(dto.toString()).build();
+	}
+	
+	/**
+	 * 解密后转对象
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param dto
+	 * @return
+	 */
+	@ApiOperation("encTest")
+	@PostMapping("encTest")
+	@ResponseBody
+	@ReqDec
+	public MyResp encTest(@RequestBody @Validated UserDTO dto) {
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
+				.data(dto.toString()).build();
 	}
 }

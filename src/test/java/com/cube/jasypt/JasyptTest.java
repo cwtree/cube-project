@@ -17,10 +17,21 @@ public class JasyptTest {
 	@Test
 	public void test() {
 		StandardPBEStringEncryptor textEncryptor = new StandardPBEStringEncryptor();
-		textEncryptor.setPassword("mycmccsalt");
+		textEncryptor.setPassword("oeTX54S6cjv87/ZiVPufcsCRLQS6bmEx");
 		textEncryptor.setAlgorithm("PBEWithMD5AndTripleDES");
-		String enc = textEncryptor.encrypt("aa");
+		String enc = textEncryptor.encrypt("cmcc2019");
 		log.info("加密后 {}", enc);
+		String dec = textEncryptor.decrypt(enc);
+		log.info("解密后 {}", dec);
+	}
+	
+	@Test
+	public void testDec() {
+		StandardPBEStringEncryptor textEncryptor = new StandardPBEStringEncryptor();
+		textEncryptor.setPassword("oeTX54S6cjv87/ZiVPufcsCRLQS6bmEx");
+		textEncryptor.setAlgorithm("PBEWithMD5AndTripleDES");
+		String enc = "SwWgzZp7gsN0w0+pNlMR4OlZvmkkGekW";
+		//log.info("加密后 {}", enc);
 		String dec = textEncryptor.decrypt(enc);
 		log.info("解密后 {}", dec);
 	}

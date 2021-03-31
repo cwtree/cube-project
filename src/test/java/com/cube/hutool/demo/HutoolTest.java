@@ -14,10 +14,12 @@ import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrSpliter;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.RuntimeUtil;
@@ -277,6 +279,14 @@ public class HutoolTest {
 	@Test
 	public void testUtil() {
 		System.out.println(RandomUtil.randomInt(10));
+	}
+
+	@Test
+	public void testId() {
+		Snowflake sf = IdUtil.createSnowflake(31L, 23L);
+		for (int i = 0; i < 10; i++) {
+			System.out.println(sf.nextId());
+		}
 	}
 
 }

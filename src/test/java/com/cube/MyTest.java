@@ -1,6 +1,7 @@
 package com.cube;
 
-import org.junit.Test;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 
 /**
  * 
@@ -10,8 +11,11 @@ import org.junit.Test;
  */
 public class MyTest {
 
-	@Test
-	public void test() {
+	public static void main(String[] args) {
+		Snowflake sf = IdUtil.createSnowflake(1111L, 2222L);
+		for (int i = 0; i < 10; i++) {
+			System.out.println(sf.nextId());
+		}
 	}
 
 }
