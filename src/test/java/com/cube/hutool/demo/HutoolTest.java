@@ -203,7 +203,6 @@ public class HutoolTest {
 		System.out.println("密文:" + enc);
 		byte[] decrypt = aes.decrypt(enc);
 		System.out.println(new String(decrypt));
-
 		String str = SecureUtil.md5(cont);
 		System.out.println("MD5: " + str);
 		System.out.println("MD5 16位: " + DigestUtil.md5Hex16(cont));
