@@ -27,5 +27,7 @@ public class MyConfig {
 	private String requestDecSwitch;
 	private String responseEncSwitch;
 	private String reqRespAesKey;
+	private String demoConfigTest;
+	// demo.config.test
 
 }

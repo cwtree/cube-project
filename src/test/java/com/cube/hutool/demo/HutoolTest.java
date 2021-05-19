@@ -14,6 +14,8 @@ import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
+import cn.hutool.core.img.ImgUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrSpliter;
@@ -144,9 +146,10 @@ public class HutoolTest {
 		 */
 		TimeInterval timer = DateUtil.timer();
 		Thread.sleep(2000L);
-		System.out.println(timer.interval() + " ms");
+		System.out.println("--" + timer.interval() + " ms");
+		System.out.println("--" + timer.intervalPretty() + " ms");
 		timer.intervalRestart();
-		System.out.println(timer.intervalMinute() + " min");
+		System.out.println("--" + timer.intervalMinute() + " min");
 
 		/**
 		 * 格式化字符串 DatePattern
@@ -286,6 +289,13 @@ public class HutoolTest {
 		for (int i = 0; i < 10; i++) {
 			System.out.println(sf.nextId());
 		}
+	}
+
+	@Test
+	public void testPic() throws Exception {
+		String pic1 = "D:\\temp\\datu.jpg";
+		String picDst = "D:\\temp\\datu1.jpg";
+		ImgUtil.scale(FileUtil.file(pic1), FileUtil.file(picDst), 0.5f);
 	}
 
 }

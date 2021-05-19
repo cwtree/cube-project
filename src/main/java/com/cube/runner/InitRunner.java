@@ -35,7 +35,7 @@ public class InitRunner implements CommandLineRunner {
 		if (log.isInfoEnabled()) {
 			log.info("完成AES加解密对象初始化");
 			UserDTO ud = UserDTO.builder().age(1).username("user").comment("comment").build();
-			log.info("加密串 {}",Base64.encode(GlobalVar.AES.encrypt(JSONUtil.toJsonStr(ud))));
+			log.info("加密串 {}", Base64.encode(GlobalVar.AES.encrypt(JSONUtil.toJsonStr(ud))));
 		}
 	}
 

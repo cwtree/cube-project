@@ -14,4 +14,7 @@ public class GlobalVar {
 
 	public static String UTF8 = "UTF-8";
 
+	@SuppressWarnings("rawtypes")
+	public static final ThreadLocal THREAD_LOCAL = new ThreadLocal();
+
 }

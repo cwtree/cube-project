@@ -3,6 +3,7 @@ package com.cube.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cube.common.Context;
+import com.cube.common.GlobalVar;
 import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 import com.cube.pojo.dto.UserDTO;
@@ -26,6 +29,8 @@ import com.cube.service.PayRouteService;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.GifCaptcha;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -64,12 +69,15 @@ public class SystemController {
 	@Resource
 	private PayRouteService payRouteService;
 
+	private ThreadLocal<String> tl = new ThreadLocal<>();
+
 	/**
 	 * 
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
 	 * @param payType
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@ApiOperation("支付策略接口模拟")
 	@GetMapping("/pay/{payType}")
 	@ResponseBody
@@ -77,6 +85,9 @@ public class SystemController {
 		if (log.isInfoEnabled()) {
 			log.info("根据传参选择不同的实现类，共用同一个接口");
 		}
+		Context context = Context.builder().traceId(IdUtil.simpleUUID()).timestamp(DateUtil.date())
+				.stack(Thread.currentThread().getStackTrace().toString()).build();
+		GlobalVar.THREAD_LOCAL.set(context);
 		String res = payRouteService.pay("付钱了啊", payType);
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(res).build();
 	}
@@ -105,26 +116,29 @@ public class SystemController {
 	@ApiOperation("返回测试")
 	@PostMapping("/vo")
 	@ResponseBody
-	public MyResp vo() {
+	public MyResp vo(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------" + request.getServerName());
+		response.addCookie(new Cookie("mycookie", "cookietest"));
 		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
 				.data(UserVO.builder().age(1).id(2L).username("chiwei").build()).build();
 	}
-	
+
 	/**
 	 * form
+	 * 
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
 	 * @return
 	 */
 	@ApiOperation("form测试")
-	@PostMapping(value = "/form",consumes = {"application/x-www-form-urlencoded"})
+	@PostMapping(value = "/form", consumes = { "application/x-www-form-urlencoded" })
 	@ResponseBody
 	public MyResp test(@RequestParam("xml") UserDTO dto) {
-		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
-				.data(dto.toString()).build();
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(dto.toString()).build();
 	}
-	
+
 	/**
 	 * 解密后转对象
+	 * 
 	 * @Description: TODO(这里用一句话描述这个方法的作用)
 	 * @param dto
 	 * @return
@@ -134,7 +148,6 @@ public class SystemController {
 	@ResponseBody
 	@ReqDec
 	public MyResp encTest(@RequestBody @Validated UserDTO dto) {
-		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg())
-				.data(dto.toString()).build();
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).msg(Resp.SUCCESS.getMsg()).data(dto.toString()).build();
 	}
 }

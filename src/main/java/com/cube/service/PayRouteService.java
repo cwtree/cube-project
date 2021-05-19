@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.cube.common.GlobalVar;
+
 import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +40,8 @@ public class PayRouteService {
 	}
 
 	public String pay(String pay, String type) {
+		log.info("==============trace info {}", GlobalVar.THREAD_LOCAL.get());
+		GlobalVar.THREAD_LOCAL.remove();
 		return payServiceMap.get(type).pay(pay);
 	}
 
