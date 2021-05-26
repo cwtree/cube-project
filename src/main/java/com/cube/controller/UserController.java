@@ -23,6 +23,7 @@ import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
 import com.cube.pojo.doo.PhoenixUser;
 import com.cube.pojo.dto.UserDTO;
+import com.cube.pojo.dto.UserQueryDTO;
 import com.cube.req.resp.advice.ReqDec;
 import com.cube.req.resp.advice.RespEnc;
 import com.cube.service.UserService;
@@ -57,6 +58,12 @@ public class UserController {
 
 	@Resource
 	private ApplicationEventPublisher publisher;
+
+	@ApiOperation("用户列表查询")
+	@PostMapping("/queryList")
+	public MyResp queryUser(@RequestBody @Validated UserQueryDTO dto) {
+		return MyResp.builder().code(Resp.SUCCESS.getCode()).data(dto).build();
+	}
 
 	/**
 	 * 

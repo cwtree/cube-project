@@ -1,5 +1,6 @@
 package com.cube.pojo.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
@@ -17,6 +18,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserVO {
 
 	private Long id;
@@ -26,5 +28,7 @@ public class UserVO {
 	@JsonProperty("user_name")
 	private String username;
 	private Integer age;
+	
+	private String nullStr;
 
 }

@@ -22,6 +22,7 @@ import com.cube.common.Context;
 import com.cube.common.GlobalVar;
 import com.cube.pojo.MyResp;
 import com.cube.pojo.Resp;
+import com.cube.pojo.dto.EnumDTO;
 import com.cube.pojo.dto.UserDTO;
 import com.cube.pojo.vo.UserVO;
 import com.cube.req.resp.advice.ReqDec;
@@ -56,6 +57,7 @@ public class SystemController {
 	@ApiOperation("生成图形验证码")
 	@GetMapping("/captcha")
 	public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-----------------test jrebel again test");
 		GifCaptcha captcha = CaptchaUtil.createGifCaptcha(80, 30);
 		try {
 			captcha.write(response.getOutputStream());
@@ -69,6 +71,7 @@ public class SystemController {
 	@Resource
 	private PayRouteService payRouteService;
 
+	@SuppressWarnings("unused")
 	private ThreadLocal<String> tl = new ThreadLocal<>();
 
 	/**
@@ -104,6 +107,20 @@ public class SystemController {
 	public MyResp collectionTest(@RequestBody @Validated List<Long> ids) {
 		log.info("集合参数 {}", ids);
 		return MyResp.result(Resp.SUCCESS);
+	}
+	
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param ids
+	 * @return
+	 */
+	@ApiOperation("枚举校验测试")
+	@PostMapping("/enum")
+	@ResponseBody
+	public MyResp enumTest(@RequestBody @Validated EnumDTO dto) {
+		log.info("参数 {}", dto);
+		return MyResp.result(Resp.SUCCESS, dto);
 	}
 
 	/**

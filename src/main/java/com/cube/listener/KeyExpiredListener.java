@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author phoenix
  * @date 2021-3-20
  */
-@Component
+//@Component
 @Slf4j
 public class KeyExpiredListener extends KeyExpirationEventMessageListener {
 

@@ -1,12 +1,13 @@
 package com.cube.hutool.demo;
 
+import java.math.BigDecimal;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
@@ -23,6 +24,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.IdcardUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
@@ -165,6 +167,9 @@ public class HutoolTest {
 		/**
 		 * 对JDK 8 LocalDateTime和LocalDate的支持
 		 */
+		System.out.println("begin："+DateUtil.beginOfDay(now));
+		System.out.println("end："+DateUtil.endOfDay(now));
+		
 	}
 
 	/**
@@ -296,6 +301,13 @@ public class HutoolTest {
 		String pic1 = "D:\\temp\\datu.jpg";
 		String picDst = "D:\\temp\\datu1.jpg";
 		ImgUtil.scale(FileUtil.file(pic1), FileUtil.file(picDst), 0.5f);
+	}
+	
+	@Test
+	public void testNumber() throws Exception {
+		long a = 1324254651564L;
+		BigDecimal bd =  NumberUtil.div(a+"", 1000+"",1);
+		System.out.println(bd.toString());
 	}
 
 }
