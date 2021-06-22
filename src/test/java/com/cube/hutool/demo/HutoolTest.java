@@ -3,6 +3,8 @@ package com.cube.hutool.demo;
 import java.math.BigDecimal;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.ChineseDate;
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
@@ -79,9 +82,14 @@ public class HutoolTest {
 		 * 当前时间
 		 */
 		Date now = DateUtil.date();
+		Date aaDate =DateUtil.endOfDay(now).setField(DateField.MILLISECOND, 0);
+		System.out.println("--------------");
+		System.out.println(DateUtil.format(DateUtil.endOfDay(now), "yyyy-MM-dd HH:mm:ss:SSS"));
+		System.out.println(DateUtil.format(aaDate, "yyyy-MM-dd HH:mm:ss:SSS"));
 		System.out.println(now);
 		String nowString = DateUtil.now();
 		System.out.println(nowString);
+		
 		/**
 		 * 当前日期
 		 */
@@ -117,6 +125,7 @@ public class HutoolTest {
 		/**
 		 * 时间偏移
 		 */
+		System.out.println(DateUtil.offsetDay(now, 1));
 		System.out.println(DateUtil.offsetHour(now, 3));
 		System.out.println(DateUtil.yesterday());
 
